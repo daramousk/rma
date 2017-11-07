@@ -115,6 +115,7 @@ class ClaimMakePicking(models.TransientModel):
             domain = domain + ['|', (move_field, '=', False),
                                (move_field + '.state', '=', 'cancel')]
             lines = lines.search(domain)
+            print domain
             if not lines:
                 raise exceptions.Warning(
                     _('Error'),
