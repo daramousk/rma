@@ -255,6 +255,11 @@
                         position="attributes">
                         <attribute name="invisible">1</attribute>
                     </xpath>
+                    <xpath
+                        expr="//field[@name='user_fault']"
+                        position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
