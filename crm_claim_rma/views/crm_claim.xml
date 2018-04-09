@@ -188,7 +188,7 @@
                     </div>
                     <separator colspan="2" string="Product Returns"/>
                     <field name="claim_line_ids">
-                        <tree string="Returned lines" create="false">
+                        <tree string="Returned lines">
                             <field name="claim_id" invisible="1"/>
                             <field name="state"/>
                             <field name="product_id"/>
