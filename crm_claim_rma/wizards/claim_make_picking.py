@@ -215,6 +215,7 @@ class ClaimMakePicking(models.TransientModel):
         # product if location are different
         # or if partner address is different
         if self.env.context.get('product_return'):
+            claim_lines.auto_set_warranty()
             common_dest_location = self._get_common_dest_location_from_line(
                 claim_lines)
             if not common_dest_location:
@@ -223,8 +224,6 @@ class ClaimMakePicking(models.TransientModel):
                     _('A product return cannot be created for various '
                       'destination locations, please choose line with a '
                       'same destination location.'))
-
-            claim_lines.auto_set_warranty()
             common_dest_partner = self._get_common_partner_from_line(
                 claim_lines)
             if not common_dest_partner:
