@@ -50,30 +50,21 @@ class AccountInvoice(models.Model):
 
         new_lines = []
         for claim_line in claim_lines:
-            if not claim_line.refund_line_id:
-                # For each lines replace quantity and add claim_line_id
-                inv_line = claim_line.invoice_line_id
-                clean_line = {}
-                for field_name, field in inv_line._all_columns.iteritems():
-                    column_type = field.column._type
-                    if column_type == 'many2one':
-                        clean_line[field_name] = inv_line[field_name].id
-                    elif column_type not in ('many2many', 'one2many'):
-                        clean_line[field_name] = inv_line[field_name]
-                    elif field_name == 'invoice_line_tax_id':
-
-                        tax_ids = inv_line[field_name].ids
-                        clean_line[field_name] = [(6, 0, tax_ids)]
-                clean_line['quantity'] = claim_line.product_returned_quantity
-                clean_line['claim_line_id'] = [claim_line.id]
-
-                new_lines.append(clean_line)
-        if not new_lines:
-            # TODO use custom states to show button of this wizard or
-            # not instead of raise an error
-
-            raise exceptions.Warning(
-                _('A refund has already been created for this claim !'))
+            # For each lines replace quantity and add claim_line_id
+            inv_line = claim_line.invoice_line_id
+            clean_line = {}
+            for field_name, field in inv_line._all_columns.iteritems():
+                column_type = field.column._type
+                if column_type == 'many2one':
+                    clean_line[field_name] = inv_line[field_name].id
+                elif column_type not in ('many2many', 'one2many'):
+                    clean_line[field_name] = inv_line[field_name]
+                elif field_name == 'invoice_line_tax_id':
+                    tax_ids = inv_line[field_name].ids
+                    clean_line[field_name] = [(6, 0, tax_ids)]
+            clean_line['quantity'] = claim_line.product_returned_quantity
+            clean_line['claim_line_id'] = [claim_line.id]
+            new_lines.append(clean_line)
         return [(0, 0, l) for l in new_lines]
 
     @api.model
