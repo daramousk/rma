@@ -217,22 +217,8 @@ class ClaimMakePicking(models.TransientModel):
         # or if partner address is different
         if self.env.context.get('product_return'):
             claim_lines.auto_set_warranty()
-            common_dest_location = self._get_common_dest_location_from_line(
-                claim_lines)
-            if not common_dest_location:
-                raise exceptions.Warning(
-                    _('Error'),
-                    _('A product return cannot be created for various '
-                      'destination locations, please choose line with a '
-                      'same destination location.'))
             common_dest_partner = self._get_common_partner_from_line(
                 claim_lines)
-            if not common_dest_partner:
-                raise exceptions.Warning(
-                    _('Error'),
-                    _('A product return cannot be created for various '
-                      'destination addresses, please choose line with a '
-                      'same address.'))
             partner_id = common_dest_partner.id
 
         # create picking
@@ -248,7 +234,7 @@ class ClaimMakePicking(models.TransientModel):
         if picking:
             picking.signal_workflow('button_confirm')
             picking.action_assign()
-            picking.write(self._get_default_picking_values(picking, claim))
+            self._get_default_picking_values(picking, claim)
 
         domain = ("[('picking_type_id', '=', %s), ('partner_id', '=', %s)]" %
                   (picking_type.id, partner_id))
@@ -268,18 +254,17 @@ class ClaimMakePicking(models.TransientModel):
         }
 
     def _get_default_picking_values(self, picking, claim):
-        vals = picking.onchange_partner_id(picking.partner_id.id)['value']
+        picking.partner_id_onchange()
         sale_order = claim.sale_order_id or claim.stock_picking_id.sale_id or \
             (claim.invoice_id.sale_ids[0] if claim.invoice_id.sale_ids else \
                 None)
         if sale_order:
-            vals.update({
+            picking.write({
                 'group_id': sale_order.procurement_group_id.id,
                 'delivery_service_level_time_id': 
                     sale_order.delivery_service_level_time_id.id,
                 'cost_center_id': sale_order.cost_center_id.id,
             })
-        return vals
 
     @api.multi
     def action_cancel(self):
