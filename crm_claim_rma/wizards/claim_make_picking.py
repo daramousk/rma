@@ -111,14 +111,6 @@ class ClaimMakePicking(models.TransientModel):
         domain = [('claim_id', '=', self.env.context['active_id'])]
         lines = self.env['claim.line'].\
             search(domain)
-        if lines:
-            domain = domain + ['|', (move_field, '=', False),
-                               (move_field + '.state', '=', 'cancel')]
-            lines = lines.search(domain)
-            if not lines:
-                raise exceptions.Warning(
-                    _('Error'),
-                    _('A picking has already been created for this claim.'))
         return lines
 
     claim_line_source_location_id = fields.Many2one(
