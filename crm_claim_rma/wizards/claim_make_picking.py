@@ -109,7 +109,8 @@ class ClaimMakePicking(models.TransientModel):
 
         move_field = 'move_in_id' if picking_type == 'in' else 'move_out_id'
         domain = [('claim_id', '=', self.env.context.get('active_id') or \
-            self.env.context.get('claim_id'))]
+            self.env.context.get('claim_id')),
+            ('product_id.type', '!=', 'service')]
         lines = self.env['claim.line'].\
             search(domain)
         if lines:
