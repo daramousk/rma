@@ -108,7 +108,8 @@ class ClaimMakePicking(models.TransientModel):
                 picking_type = 'out'
 
         move_field = 'move_in_id' if picking_type == 'in' else 'move_out_id'
-        domain = [('claim_id', '=', self.env.context['active_id'])]
+        domain = [('claim_id', '=', self.env.context.get('active_id') or \
+            self.env.context.get('claim_id'))]
         lines = self.env['claim.line'].\
             search(domain)
         if lines:
@@ -207,7 +208,10 @@ class ClaimMakePicking(models.TransientModel):
             picking_type = warehouse_rec.int_type_id
             write_field = 'move_out_id'
 
-        claim = self.env['crm.claim'].browse(self.env.context['active_id'])
+        claim = self.env['crm.claim'].browse(
+            self.env.context.get('active_id') or self.env.context.get(
+                'claim_id')
+        )
         partner_id = claim.delivery_address_id.id
         claim_lines = self.claim_line_ids
 
