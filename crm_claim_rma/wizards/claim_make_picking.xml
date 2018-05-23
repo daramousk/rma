@@ -8,6 +8,25 @@
 <openerp>
     <data>
 
+        <record id="claim_line_ids_tree" model="ir.ui.view">
+            <field name="name">claim.line.ids.tree</field>
+            <field name="model">claim.line</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <tree string="Claim Lines" version="7.0">
+                    <field name="claim_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="prodlot_id"/>
+                    <field name="warning"/>
+                    <field name="warranty_type"/>
+                    <field name="claim_origin"/>
+                    <field name="claim_diagnosis"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_claim_picking" model="ir.ui.view">
             <field name="name">claim_picking</field>
             <field name="model">claim_make_picking.wizard</field>
@@ -18,7 +37,22 @@
                         <field name="claim_line_dest_location_id"/>
                     </group>
                     <separator string="Select lines for picking"/>
-                    <field name="claim_line_ids" nolabel="1"/>
+                    <field
+                        name="claim_line_ids"
+                        nolabel="1"
+                        context="{'tree_view_ref': 'crm_claim_rma.claim_line_ids_tree'}">
+                        <tree>
+                            <field name="claim_id" invisible="1"/>
+                            <field name="state"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="prodlot_id"/>
+                            <field name="warning"/>
+                            <field name="warranty_type"/>
+                            <field name="claim_origin"/>
+                            <field name="claim_diagnosis"/>
+                        </tree>
+                    </field>
                     <footer>
                         <button
                             string="Create picking"
@@ -39,8 +73,8 @@
             <field name="src_model">crm.claim</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{'picking_type': 'in','product_return': True}</field>
+            <field name="target">current</field>
+            <field name="context">{'picking_type': 'in','product_return': True, 'claim_id': active_id}</field>
         </record>
 
         <record id="action_claim_picking_out" model="ir.actions.act_window">
@@ -50,8 +84,8 @@
             <field name="src_model">crm.claim</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{'picking_type': 'out'}</field>
+            <field name="target">current</field>
+            <field name="context">{'picking_type': 'out', 'claim_id': active_id}</field>
         </record>
 
     </data>
