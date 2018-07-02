@@ -189,7 +189,8 @@ class CrmClaim(models.Model):
             values['code'] = self._get_sequence_number(values['claim_type'])
         claim = super(CrmClaim, self).create(values)
         claim.with_context(
-            create_lines=True)._onchange_invoice_warehouse_type_date()
+            create_lines=True if not values.get('claim_line_ids') else False) \
+                ._onchange_invoice_warehouse_type_date()
         return claim
 
     @api.multi
