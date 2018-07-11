@@ -213,7 +213,11 @@
                 <page string="Follow Up" position="before">
                     <page string="Generated Documents">
                         <separator colspan="2" string="Refunds"/>
-                        <field name="invoice_ids" colspan="4" readonly="1"/>
+                        <field
+                            name="invoice_ids"
+                            colspan="4"
+                            readonly="1"
+                            context="{'form_view_ref': 'account.invoice_form'}"/>
                         <separator colspan="2" string="Receptions / Deliveries"/>
                         <field name="picking_ids" colspan="4" readonly="1"/>
                     </page>
