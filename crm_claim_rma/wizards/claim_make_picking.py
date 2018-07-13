@@ -232,7 +232,7 @@ class ClaimMakePicking(models.TransientModel):
         if picking:
             picking.signal_workflow('button_confirm')
             picking.action_assign()
-            self._get_default_picking_values(picking, claim)
+
 
         domain = ("[('picking_type_id', '=', %s), ('partner_id', '=', %s)]" %
                   (picking_type.id, partner_id))
@@ -251,18 +251,6 @@ class ClaimMakePicking(models.TransientModel):
             'type': 'ir.actions.act_window',
         }
 
-    def _get_default_picking_values(self, picking, claim):
-        picking.partner_id_onchange()
-        sale_order = claim.sale_order_id or claim.stock_picking_id.sale_id or \
-            (claim.invoice_id.sale_ids[0] if claim.invoice_id.sale_ids else \
-                None)
-        if sale_order:
-            picking.write({
-                'group_id': sale_order.procurement_group_id.id,
-                'delivery_service_level_time_id': 
-                    sale_order.delivery_service_level_time_id.id,
-                'cost_center_id': sale_order.cost_center_id.id,
-            })
 
     @api.multi
     def action_cancel(self):
