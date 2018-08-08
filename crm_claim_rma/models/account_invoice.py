@@ -52,7 +52,7 @@ class AccountInvoice(models.Model):
         for claim_line in claim_lines:
             if not claim_line.refund_line_id:
                 # For each lines replace quantity and add claim_line_id
-                inv_line = claim_line.invoice_line_id
+                inv_line = claim_line.invoice_line_id or claim_line
                 clean_line = {}
                 for field_name, field in inv_line._all_columns.iteritems():
                     column_type = field.column._type
