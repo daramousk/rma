@@ -49,7 +49,7 @@ class AccountInvoice(models.Model):
         claim_lines = self.env['claim.line'].browse(line_ids)
 
         new_lines = []
-        for claim_line in claim_lines:
+        for claim_line in claim_lines.filtered('invoice_line_id'):
             # For each lines replace quantity and add claim_line_id
             inv_line = claim_line.invoice_line_id
             clean_line = {}
