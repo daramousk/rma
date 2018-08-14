@@ -399,11 +399,6 @@ class ClaimLine(models.Model):
             if not line_id.product_id:
                 raise exceptions.Warning(
                     _('Error'), _('Please set product first'))
-
-            if not line_id.invoice_line_id:
-                raise exceptions.Warning(
-                    _('Error'), _('Please set invoice first'))
-
             line_id.set_warranty_limit()
             line_id.set_warranty_return_address()
 
